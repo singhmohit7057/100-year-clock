@@ -6,6 +6,11 @@ This project creates a **dynamic radial clock interface** where time is displaye
 
 ---
 
+## 🚀 Live Demo
+
+🔗 **Open the clock:** 
+[![Live Demo](https://img.shields.io/badge/Live-Demo-green)](https://singhmohit7057.github.io/100-year-clock/)
+
 # ✨ Features
 
 * 🌀 **Radial Time Visualization**
