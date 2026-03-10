@@ -1,0 +1,509 @@
+*,
+::before,
+::after {
+  box-sizing: border-box;
+}
+
+html{
+  scrollbar-gutter: stable;
+  overflow-x: hidden;
+}
+
+:root {
+  --clr-bg: black;
+  --clock-size: min(95vh, 95vw);
+  --clock-clr: rgb(12, 74, 110);
+}
+body{
+  margin:0;
+  min-height:100svh;
+  display:flex;
+  overflow:hidden;
+  place-content:center;
+  font-family:system-ui,"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;
+  color:white;
+
+  background:
+  radial-gradient(circle at center, #0b3d4a 0%, #02070c 65%),
+  linear-gradient(135deg,#020409,#050913,#020409);
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+  radial-gradient(circle at center,
+  rgba(0,255,180,0.35) 0%,
+  rgba(0,255,180,0.15) 25%,
+  rgba(0,0,0,0) 60%);
+  filter:blur(120px);
+  z-index:-1;
+}
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+
+  background-image:
+  linear-gradient(rgba(0,255,200,0.05) 1px, transparent 1px),
+  linear-gradient(90deg, rgba(0,255,200,0.05) 1px, transparent 1px);
+
+  background-size:80px 80px;
+  opacity:0.4;
+
+  z-index:-2;
+}
+
+
+
+.clock {
+
+  position: relative;
+  inset: 0;
+  margin: auto;
+  width: var(--clock-size);
+  height: var(--clock-size);
+  aspect-ratio: 1;
+  place-content: center;
+  background: var(--clock-clr);
+  border-radius: 50%;
+}
+@media (width < 800px) {
+  .clock {
+    left: 0;
+    right: auto;
+    translate: calc((50% - 2rem) * -1) 0;
+  }
+}
+/* semi transparent mask to hide not active time data*/
+.clock::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  margin: auto;
+  background-color: rgba(255, 255, 255, 0.1);
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% 48%,
+    50% 48%,
+    50% 52%,
+    100% 52%,
+    100% 100%,
+    0 100%
+  );
+  border-radius: 50%;
+  z-index: 20;
+}
+
+.clock > div {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: var(--clock-d);
+  height: var(--clock-d);
+  font-size: var(--f-size, 0.9rem);
+  aspect-ratio: 1;
+  isolation: isolate;
+  aspect-ratio: 1;
+  border-radius: 50%;
+}
+
+/* years */
+.clock > div:nth-of-type(1) {
+  --clock-d: calc(var(--clock-size) - 20px);
+}
+/* seconds */
+.clock > div:nth-of-type(2) {
+  --clock-d: calc(var(--clock-size) - 130px);
+}
+/* minutes */
+.clock > div:nth-child(3) {
+  --clock-d: calc(var(--clock-size) - 195px);
+}
+
+/* hours */
+.clock > div:nth-child(4) {
+  --clock-d: calc(var(--clock-size) - 260px);
+}
+/* day numbers */
+.clock > div:nth-child(5) {
+  --clock-d: calc(var(--clock-size) - 350px);
+}
+/* month names  */
+.clock > div:nth-child(6) {
+  --clock-d: calc(var(--clock-size) - 440px);
+}
+/* day names*/
+.clock > div:nth-child(7) {
+  --clock-d: calc(var(--clock-size) - 520px);
+
+}
+
+.clock-face {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transition: 300ms linear;
+}
+.clock-face > * {
+  position: absolute;
+  transform-origin: center;
+  white-space: nowrap;
+  color: #00ff9c; /* ring color */
+  text-shadow:0 0 6px rgba(0,255,160,0.8);
+  opacity: 1;
+}
+
+.clock-face > *.active {
+  opacity: 1;
+}
+
+.clock > .current-lang-display {
+  position: absolute;
+   left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  place-content: center;
+  background-color: var(--clock-clr);
+  border: 1px solid rgba(255 255 255 / 0.25);
+  color: white;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  aspect-ratio: 1/1;
+  line-height:1;
+  border-radius:50%;
+  cursor: pointer;
+  transition: 300ms ease-in-out;
+  font-size: 1.5rem;
+  outline: none;
+  &:focus-visible,
+  &:hover {
+    background-color: white;
+  }
+}
+
+
+/* Dialog styles */
+dialog {
+  width: min(calc(100% - 2rem), 380px);
+  padding: 1rem;
+  border: none;
+  border-radius: 999px;
+
+  /* futuristic glass look */
+  background:
+  radial-gradient(circle at center,
+  rgba(0,255,200,0.15) 0%,
+  rgba(0,255,200,0.08) 40%,
+  rgba(10,25,35,0.75) 70%);
+  backdrop-filter: blur(18px);
+
+  border: 1px solid rgba(0,255,200,0.25);
+
+  box-shadow:
+  0 0 80px rgba(0,255,200,0.35),
+  inset 0 0 40px rgba(0,255,200,0.2);
+
+  text-align: center;
+  aspect-ratio: 1;
+  overflow: visible;
+
+  @starting-style {
+    opacity: 0;
+    scale: 0;
+  }
+  transition: opacity 500ms ease-in,
+    scale 500ms cubic-bezier(0.28, -0.55, 0.27, 1.55);
+}
+/* Backdrop styling */
+dialog[open]::backdrop {
+  background-color: rgba(from black r g b / 0.5);
+  backdrop-filter: blur(3px);
+  opacity: 1;
+  @starting-style {
+    opacity: 0;
+  }
+  transition: opacity 1000ms ease-in; /* this doesn't appear to be working */
+}
+
+
+dialog .btn-dialog-close {
+  position: absolute;
+  top: 0rem;
+  right: 25%;
+  aspect-ratio: 1;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: black;
+  font-size: 1.2rem;
+  color: white;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: rotate 300ms ease-in-out;
+  z-index: 11;
+  &:focus-visible,
+  &:hover {
+    rotate: 90deg;
+  }
+}
+
+.language-options label.active{
+  transform: translate(-50%, -50%) scale(1.25);
+  will-change: transform;
+  background: rgba(0,0,0,0.15);
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  z-index: 5;
+}
+
+.language-options label{
+  overflow: visible;
+}
+
+.language-options {
+  position: relative;
+  inset: 0;
+  margin: auto;
+  border-radius: 50%;
+  aspect-ratio: 1/1;
+  overflow: hidden;
+}
+.language-options > label {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  font-size: 0.9rem;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  transition: 300ms ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  place-content: center;
+  transform-origin: center;
+
+  &.active {
+    color: white;
+    background: var(--clock-clr);
+  }
+
+  &:focus-visible,
+  &:hover {
+    scale: 1.1;
+    z-index: 2;
+  }
+}
+.language-title {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  color: #00ffc3;
+  text-shadow:
+  0 0 10px rgba(0,255,200,0.8),
+  0 0 25px rgba(0,255,200,0.4);
+  font-size: 1.3rem;
+  font-weight: 600;
+  z-index: 100;   /* ADD THIS LINE */
+  transition: opacity 300ms ease-in-out;
+}
+.flag-icon{
+  width: 26px;
+  height: 18px;
+  filter: drop-shadow(0 0 4px rgba(183, 247, 233, 0.5));
+  object-fit: cover;
+  border-radius: 2px;
+  transition: transform .2s ease;
+}
+.language-options input[type="radio"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  overflow: hidden;
+}
+
+.death-year-input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+}
+
+.death-year-input-container h2 {
+  color: white;
+  margin: 0;
+  text-align: center;
+}
+
+.death-year-input-container input {
+  padding: 0.5rem;
+  font-size: 1.2rem;
+  width: 200px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  border-radius: 4px;
+}
+
+.death-year-input-container button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  background: var(--clock-clr);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.death-year-input-container button:hover {
+  background: rgb(8, 47, 73);
+}
+
+.countdown-timer {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  color: white;
+  text-align: center;
+  z-index: 1000;
+}
+
+.clock-face .number.dead {
+  color: red;
+  opacity: 1;
+}
+
+[data-clock="months"] {
+  font-size: clamp(0.5rem, 0.8vmin, 0.8rem);
+}
+
+[data-clock="day-names"] {
+  font-size: clamp(0.45rem, 0.7vmin, 0.7rem);
+}
+
+
+.page-title{
+  position: fixed;
+  top: 20px;
+  left: 160px;
+  transform: translateX(-50%);
+  font-size: clamp(18px,3vw,28px);
+  font-weight: 600;
+  color: white;
+  letter-spacing: 1px;
+  text-align:left;
+  pointer-events: none;
+}
+
+.instruction{
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  font-size: clamp(12px,1.2vw,16px);
+  color: rgba(255,255,255,0.75);
+}
+
+.time-separator{
+  position:absolute;
+  top:50%;
+  transform:translateY(-58%);
+  font-size:clamp(0.7rem,1vmin,1rem);
+  color:white;
+  text-shadow:0 0 6px rgba(0,255,160,0.8);
+  z-index:40;
+}
+
+/* hour : minute */
+.sep1{
+  left:calc(50% + 195px);
+}
+
+/* minute : second */
+.sep2{
+  left:calc(50% + 227px);
+}
+
+/*Mobile */
+@media (max-width:600px){
+
+  :root{
+    --clock-size: 94vw;
+  }
+/* years */
+  .clock > div:nth-of-type(1){
+    --clock-d: calc(var(--clock-size) - 10px);
+  }
+/* seconds */
+  .clock > div:nth-of-type(2){
+    --clock-d: calc(var(--clock-size) - 70px);
+  }
+/* minutes */
+  .clock > div:nth-child(3){
+    --clock-d: calc(var(--clock-size) - 60px);
+  }
+/* hours */
+  .clock > div:nth-child(4){
+    --clock-d: calc(var(--clock-size) - 60px);
+  }
+/* days */
+  .clock > div:nth-child(5){
+    --clock-d: calc(var(--clock-size) - 140px);
+  }
+/* months */
+  .clock > div:nth-child(6){
+    --clock-d: calc(var(--clock-size) - 10px);
+  }
+/* weekday */
+  .clock > div:nth-child(7){
+    --clock-d: calc(var(--clock-size) - 100px);
+  }
+
+}
+
+/* Audio */
+.speaker-btn{
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0,0,0,0.7);
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  display: grid;
+  place-content: center;
+  transition: 0.2s;
+}
+
+.speaker-btn:hover{
+  background: rgba(255,255,255,0.2);
+}
