@@ -160,6 +160,9 @@ Run locally by opening:
 ```
 index.html
 ```
+or Through VS Code
+start index.html
+```
 
 No build tools required.
 
