@@ -128,6 +128,7 @@ Controls:
 ```
 100-year-clock/
 │
+├── .gitignore
 ├── index.html
 ├── style.css
 ├── script.js
